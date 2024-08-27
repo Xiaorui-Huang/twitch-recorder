@@ -48,8 +48,6 @@ elif output_folder == str(Path.home() / 'Downloads'):
 with open(config_file_path, 'w') as configfile:
     config.write(configfile)
 
-os.system(f"title {twitch_username} @ {output_folder}")
-
 def list_stream_qualities(username):
     twitch_stream_url = f"https://www.twitch.tv/{username}"
     streams = streamlink.streams(twitch_stream_url)
