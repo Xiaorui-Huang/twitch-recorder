@@ -9,12 +9,14 @@ from tkinter import filedialog, Tk
 from time import sleep
 from pathlib import Path
 
+twitch_home = str(Path.home() / 'Downloads' / 'twitch_recordings')
+
 # Add argparse
 parser = argparse.ArgumentParser(description="Twitch stream recorder")
 parser.add_argument("username", help="Twitch username of the streamer")
 parser.add_argument("-l", "--list", action="store_true", help="List available stream qualities")
 parser.add_argument("-q", "--quality", default="best", help="Choose stream quality (default: best)")
-parser.add_argument("-o", "--output", default=str(Path.home() / 'Downloads'), help="Output folder path (default: ~/Downloads)")
+parser.add_argument("-o", "--output", default=twitch_home, help="Output folder path (default: ~/Downloads)")
 args = parser.parse_args()
 
 twitch_username = args.username
@@ -40,7 +42,7 @@ if not output_folder:
     root.withdraw()
     output_folder = filedialog.askdirectory(title="Select Output Folder")
     root.destroy()
-elif output_folder == str(Path.home() / 'Downloads'):
+elif output_folder == twitch_home:
     # If default output folder is used, update config file
     config['DEFAULT']['output_folder'] = output_folder
 
