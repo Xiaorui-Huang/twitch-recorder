@@ -9,6 +9,7 @@ from tkinter import filedialog, Tk
 from time import sleep
 from pathlib import Path
 
+# Set up the default twitch recordings folder
 twitch_home = str(Path.home() / 'Downloads' / 'twitch_recordings')
 
 # Add argparse
@@ -20,7 +21,7 @@ parser.add_argument("-o", "--output", default=twitch_home, help="Output folder p
 args = parser.parse_args()
 
 twitch_username = args.username
-output_folder = args.output
+output_folder = os.path.join(args.output, twitch_username)  # Save recordings in a folder named after the streamer
 
 config_file_path = 'config.ini'
 config = configparser.ConfigParser()
@@ -45,6 +46,9 @@ if not output_folder:
 elif output_folder == twitch_home:
     # If default output folder is used, update config file
     config['DEFAULT']['output_folder'] = output_folder
+
+# Ensure the output folder exists
+os.makedirs(output_folder, exist_ok=True)
 
 # Save the variables to the config file
 with open(config_file_path, 'w') as configfile:
