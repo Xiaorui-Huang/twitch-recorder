@@ -89,8 +89,8 @@ async def monitor_stream(username, quality):
                 await record_stream(m3u8_url)
                 break
             else:
-                print(f"No stream is live for {username}. Checking again in 60 seconds...")
-                await asyncio.sleep(60)
+                print(f"No stream is live for {username}. Checking again in 600 seconds...")
+                await asyncio.sleep(600)
     except KeyboardInterrupt:
         print("\nStream monitoring stopped by user.")
 
