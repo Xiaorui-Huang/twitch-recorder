@@ -19,7 +19,7 @@ This Python script allows you to record Twitch streams using Streamlink and FFmp
 
 **Windows**
 
-1. Open powershell (open start menu and search it, if all can't find this, I literally can't help you🤣
+1. Open powershell (open start menu and search it, if y'all can't find this, I literally can't help you🤣
 
 2. Install scoop package manager by copying the following into the commandline (same instruction as in https://scoop.sh)
 ```powershell
@@ -27,13 +27,35 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ```
 
-3. Install Python
+3. Install python & ffmpeg & git
 ```powershell
 scoop bucket add main
-scoop install main/python
+scoop install python
+scoop install ffmpeg
+```
+4. Git code
+```
+git clone https://github.com/Xiaorui-Huang/twitch-recorder.git
+cd twitch-recorder
 ```
 
-4. Go to [installation](#installation)
+5. Record the path to this code's directory
+```
+pwd # then copy the output and save it
+# to get back to it do 
+cd <the shit you just copy and saved>
+```
+
+6. Go to [installation](#installation) **AND always execute the commands in the code's directory**
+
+
+
+**Mac**
+
+Not gonna help a Mac user🙂‍↔️ 
+
+(fine, just go to https://brew.sh/ and figure it out yourself, Mac might even have python pre-installed idk)
+
 
 ## Installation
 
@@ -68,7 +90,9 @@ scoop install main/python
    python twitch_recorder.py <username> -q 720p
    ```
 
-4. Press Ctrl+C to stop recording. The script will attempt to finalize the recording gracefully.
+4. Press Ctrl+C to stop recording. The script will attempt to finalize the recording up to this point and save
+
+5. Check your **Downloads** folder and Pog
 
 ## Usage
 
@@ -85,6 +109,7 @@ Optional arguments:
 - `-h`, `--help`: Show help message and exit
 - `-l`, `--list`: List available stream qualities
 - `-q QUALITY`, `--quality QUALITY`: Choose stream quality (default: best)
+- `-o SAVE_PATH, `--output SAVE_PATH`: Choose a custom directory to save the recordings (default: ~/Downloads/twitch_recordings)
 
 ## Configuration
 
