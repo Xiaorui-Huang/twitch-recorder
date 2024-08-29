@@ -2,6 +2,8 @@
 
 This Python script allows you to record Twitch streams using Streamlink and FFmpeg. It provides options to list available stream qualities, choose a specific quality for recording, and automatically retry if the stream is not live.
 
+*Tested on a raspberry pi 4 and barely noticed if any resources are used up, thanks **ffmpeg***
+
 ## Features
 
 - Record Twitch streams
