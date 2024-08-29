@@ -55,7 +55,11 @@ This Python script allows you to record Twitch streams using Streamlink and FFmp
 
 Not gonna help a Mac user🙂‍↔️ 
 
-(Fine, just go to [https://brew.sh/](https://brew.sh/) and figure it out yourself. Mac might even have Python pre-installed, idk.)
+(Fine, just go to [https://brew.sh/](https://brew.sh/) and figure it out yourself, just use `brew` instead of `scoop`. Mac might even have Python pre-installed, idk.)
+
+**Linux**
+
+You guys are computer wizards, donno why you are here reading this...
 
 ## Installation
 
