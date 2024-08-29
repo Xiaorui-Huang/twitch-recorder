@@ -1,13 +1,13 @@
 # Twitch Stream Recorder
 
-This Python script allows you to record Twitch streams using Streamlink and FFmpeg. It provides options to list available stream qualities and choose a specific quality for recording.
+This Python script allows you to record Twitch streams using Streamlink and FFmpeg. It provides options to list available stream qualities, choose a specific quality for recording, and automatically retry if the stream is not live.
 
 ## Features
 
-- Record Twitch streams in various qualities
+- Record Twitch streams
+- Run in the background and auto record once streamer is live
 - List available stream qualities
-- Automatically retry if the stream is not live
-- Saving of recording in process with Ctrl+C
+- Save recordings still in progress with Ctrl+C
 
 ## Requirements
 
@@ -19,101 +19,99 @@ This Python script allows you to record Twitch streams using Streamlink and FFmp
 
 **Windows**
 
-1. Open powershell (open start menu and search it, if y'all can't find this, I literally can't help you🤣
+1. Open PowerShell (open the Start menu and search for it. If you can't find this, I literally can't help you🤣).
 
-2. Install scoop package manager by copying the following into the commandline (same instruction as in https://scoop.sh)
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
-```
+2. Install the Scoop package manager by copying the following into the command line (same instructions as in [https://scoop.sh](https://scoop.sh)):
+    ```powershell
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+    Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+    ```
 
-3. Install python & ffmpeg & git
-```powershell
-scoop bucket add main
-scoop install python
-scoop install ffmpeg
-```
-4. Git code
-```
-git clone https://github.com/Xiaorui-Huang/twitch-recorder.git
-cd twitch-recorder
-```
+3. Install Python, FFmpeg, and Git:
+    ```powershell
+    scoop bucket add main
+    scoop install python ffmpeg git
+    ```
 
-5. Record the path to this code's directory
-```
-pwd # then copy the output and save it
-# to get back to it do 
-cd <the shit you just copy and saved>
-```
+4. Clone the code repository:
+    ```powershell
+    git clone https://github.com/Xiaorui-Huang/twitch-recorder.git
+    cd twitch-recorder
+    ```
 
-6. Go to [installation](#installation) **AND always execute the commands in the code's directory**
+5. Record the path to this code's directory:
+    ```powershell
+    pwd  # then copy the output and save it
 
+    # to get back to it later, use:
+    cd <the path you just copied and saved>
+    ```
 
+6. Proceed to [Installation](#installation) **AND always execute the commands in the code's directory**.
 
 **Mac**
 
 Not gonna help a Mac user🙂‍↔️ 
 
-(fine, just go to https://brew.sh/ and figure it out yourself, Mac might even have python pre-installed idk)
-
+(Fine, just go to [https://brew.sh/](https://brew.sh/) and figure it out yourself. Mac might even have Python pre-installed, idk.)
 
 ## Installation
 
 1. Clone this repository or download the script.
 2. Install the required Python packages:
-
-   ```
-   pip install streamlink asyncio
-   ```
-
+    ```bash
+    pip install streamlink asyncio
+    ```
 3. Ensure FFmpeg is installed and available in your system PATH.
 
 ## Quick Start
 
 1. Run the script with a Twitch username:
-
-   ```
-   python twitch_recorder.py <username>
-   ```
-
-   This will start recording the stream in the best available quality.
+    ```bash
+    python twitch_recorder.py <username>
+    ```
+    This will start recording the stream in the best available quality.
 
 2. To list available stream qualities:
-
-   ```
-   python twitch_recorder.py <username> -l
-   ```
+    ```bash
+    python twitch_recorder.py <username> -l
+    ```
 
 3. To record with a specific quality:
+    ```bash
+    python twitch_recorder.py <username> -q 720p
+    ```
 
-   ```
-   python twitch_recorder.py <username> -q 720p
-   ```
+4. To customize the retry delay (default is 5 minutes):
+    ```bash
+    python twitch_recorder.py <username> -r 600  # Retry every 10 minutes
+    ```
 
-4. Press Ctrl+C to stop recording. The script will attempt to finalize the recording up to this point and save
+5. Press Ctrl+C to stop recording. The script will attempt to finalize the recording up to this point and save it.
 
-5. Check your **Downloads** folder and Pog
+6. Check your **Downloads** folder and Pog.
 
 ## Usage
 
-```
-python twitch_recorder.py [-h] [-l] [-q QUALITY] username
+```bash
+python twitch_recorder.py [-h] [-l] [-q QUALITY] [-d DELAY] [-o SAVE_PATH] username
 ```
 
-Positional arguments:
+### Positional arguments:
 
 - `username`: Twitch username of the streamer
 
-Optional arguments:
+### Optional arguments:
 
 - `-h`, `--help`: Show help message and exit
 - `-l`, `--list`: List available stream qualities
 - `-q QUALITY`, `--quality QUALITY`: Choose stream quality (default: best)
-- `-o SAVE_PATH, `--output SAVE_PATH`: Choose a custom directory to save the recordings (default: ~/Downloads/twitch_recordings)
+- `-d DELAY`, `--delay DELAY`: Set retry delay in seconds if stream is not live (default: 300 seconds)
+- `-o SAVE_PATH`, `--output SAVE_PATH`: Choose a custom directory to save the recordings (default: ~/Downloads/twitch_recordings)
 
 ## Configuration
 
-On first run, you'll be prompted to choose an output folder. This path will be saved in a `config.ini` file.
+On the first run, you'll be prompted to choose an output folder. This path will be saved in a `config.ini` file for future runs.
 
 ## Disclaimer
 

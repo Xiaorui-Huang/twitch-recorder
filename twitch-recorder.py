@@ -18,6 +18,7 @@ parser.add_argument("username", help="Twitch username of the streamer")
 parser.add_argument("-l", "--list", action="store_true", help="List available stream qualities")
 parser.add_argument("-q", "--quality", default="best", help="Choose stream quality (default: best)")
 parser.add_argument("-o", "--output", default=twitch_home, help="Output folder path (default: ~/Downloads/twitch_recordings)")
+parser.add_argument("-d", "--delay", type=int, default=300, help="Retry delay in seconds if stream is not live (default: 300 seconds)")
 args = parser.parse_args()
 
 twitch_username = args.username
@@ -97,7 +98,7 @@ async def monitor_stream(username, quality):
                 await record_stream(m3u8_url)
                 break
             else:
-                delay = 120
+                delay = args.delay
                 print(f"No stream is live for {username}. Checking again in {delay} seconds...")
                 await asyncio.sleep(delay)
     except KeyboardInterrupt:
