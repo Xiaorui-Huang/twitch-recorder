@@ -65,9 +65,17 @@ def list_stream_qualities(username):
         print("No streams available.")
     return streams
 
-async def get_stream_url(username, quality):
+async def get_stream_url(username, quality, retries=5, delay=30):
     twitch_stream_url = f"https://www.twitch.tv/{username}"
     streams = streamlink.streams(twitch_stream_url)
+    
+    # get streams with retries
+    for i in range(retries):
+        try:
+            streams = streamlink.streams(twitch_stream_url)
+        except streamlink.exceptions.PluginError as e:
+            print(f"Attempt {i+1}/{retries} failed: {e}. Retrying in {delay} seconds...")
+            time.sleep(delay)
 
     if not streams:
         return None
@@ -89,8 +97,9 @@ async def monitor_stream(username, quality):
                 await record_stream(m3u8_url)
                 break
             else:
-                print(f"No stream is live for {username}. Checking again in 600 seconds...")
-                await asyncio.sleep(600)
+                delay = 120
+                print(f"No stream is live for {username}. Checking again in {delay} seconds...")
+                await asyncio.sleep(delay)
     except KeyboardInterrupt:
         print("\nStream monitoring stopped by user.")
 

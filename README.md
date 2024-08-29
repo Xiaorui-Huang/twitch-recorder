@@ -15,6 +15,26 @@ This Python script allows you to record Twitch streams using Streamlink and FFmp
 - Streamlink
 - FFmpeg
 
+## The Noob Manual
+
+**Windows**
+
+1. Open powershell (open start menu and search it, if all can't find this, I literally can't help you🤣
+
+2. Install scoop package manager by copying the following into the commandline (same instruction as in https://scoop.sh)
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+```
+
+3. Install Python
+```powershell
+scoop bucket add main
+scoop install main/python
+```
+
+4. Go to [installation](#installation)
+
 ## Installation
 
 1. Clone this repository or download the script.
