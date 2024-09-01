@@ -120,7 +120,7 @@ You guys are computer wizards, donno why you are here reading this...
 ## Usage
 
 ```bash
-python twitch_recorder.py [-h] [-l] [-q QUALITY] [-d DELAY] [-o SAVE_PATH] username
+python twitch_recorder.py [-h] [-l] [-q QUALITY] [-d DELAY] [-s NTFY_TOPIC] [-o SAVE_PATH] username
 ```
 
 ### Positional arguments
