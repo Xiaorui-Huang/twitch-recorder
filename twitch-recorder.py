@@ -4,6 +4,7 @@ import os
 import configparser
 import signal
 import argparse
+import requests
 from datetime import datetime
 from tkinter import filedialog, Tk
 from time import sleep
@@ -19,17 +20,17 @@ parser.add_argument("-l", "--list", action="store_true", help="List available st
 parser.add_argument("-q", "--quality", default="best", help="Choose stream quality (default: best)")
 parser.add_argument("-o", "--output", default=twitch_home, help="Output folder path (default: ~/Downloads/twitch_recordings)")
 parser.add_argument("-d", "--delay", type=int, default=300, help="Retry delay in seconds if stream is not live (default: 300 seconds)")
+parser.add_argument("-s", "--subscribe", nargs='?', const=True, help="Subscribe to a ntfy topic for live notifications")
 args = parser.parse_args()
 
-twitch_username = args.username
-output_folder = os.path.join(args.output, twitch_username)  # Save recordings in a folder named after the streamer
+output_folder = os.path.join(args.output, args.username)  # Save recordings in a folder named after the streamer
 
 config_file_path = 'config.ini'
 config = configparser.ConfigParser()
 
 # Check if the config file exists, if not create one
 if not os.path.exists(config_file_path):
-    config['DEFAULT'] = {'output_folder': ''}
+    config['DEFAULT'] = {'output_folder': '', 'ntfy_topic': ''}
     with open(config_file_path, 'w') as configfile:
         config.write(configfile)
 
@@ -50,6 +51,18 @@ elif output_folder == twitch_home:
 
 # Ensure the output folder exists
 os.makedirs(output_folder, exist_ok=True)
+
+# Handle ntfy topic subscription
+ntfy_topic = None
+if args.subscribe is not None:
+    if args.subscribe is True:
+        ntfy_topic = config['DEFAULT'].get('ntfy_topic', '')
+        if not ntfy_topic:
+            ntfy_topic = input("No ntfy topic found in the config. Please enter the ntfy topic: ")
+            config['DEFAULT']['ntfy_topic'] = ntfy_topic
+    else:
+        ntfy_topic = args.subscribe
+        config['DEFAULT']['ntfy_topic'] = ntfy_topic
 
 # Save the variables to the config file
 with open(config_file_path, 'w') as configfile:
@@ -96,6 +109,8 @@ async def monitor_stream(username, quality):
             m3u8_url = await get_stream_url(username, quality)
             if m3u8_url:
                 await record_stream(m3u8_url)
+                if ntfy_topic:
+                    send_ntfy_notification(ntfy_topic, f"Recording of {username} stream started.")
                 break
             else:
                 delay = args.delay
@@ -106,7 +121,7 @@ async def monitor_stream(username, quality):
 
 async def record_stream(m3u8_url):
     quality_suffix = "_" + args.quality if args.quality != 'best' else ''
-    output_file = f'{output_folder}/{twitch_username}_{datetime.now().strftime("%d_%m_%y-%H_%M")}{quality_suffix}.mp4'
+    output_file = f'{output_folder}/{args.username}_{datetime.now().strftime("%d_%m_%y-%H_%M")}{quality_suffix}.mp4'
     ffmpeg_cmd = ['ffmpeg', '-i', m3u8_url, '-c', 'copy', '-bsf:a', 'aac_adtstoasc', output_file]
     
     process = await asyncio.create_subprocess_exec(*ffmpeg_cmd, stdin=asyncio.subprocess.PIPE)
@@ -129,6 +144,17 @@ async def record_stream(m3u8_url):
     
     print(f"Recording finished. Output file: {output_file}")
 
+    if ntfy_topic:
+        send_ntfy_notification(ntfy_topic, f"Recording of {args.username} stream finished. Output file: {output_file}")
+
+def send_ntfy_notification(topic, message):
+    url = f"https://ntfy.sh/{topic}"
+    response = requests.post(url, data=message)
+    if response.status_code == 200:
+        print(f"Notification sent to ntfy topic: {topic}")
+    else:
+        print(f"Failed to send notification. HTTP Status Code: {response.status_code}")
+
 def signal_handler(signum, frame):
     raise KeyboardInterrupt
 
@@ -136,9 +162,9 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     
     if args.list:
-        list_stream_qualities(twitch_username)
+        list_stream_qualities(args.username)
     else:
         try:
-            asyncio.run(monitor_stream(twitch_username, args.quality))
+            asyncio.run(monitor_stream(args.username, args.quality))
         except KeyboardInterrupt:
             print("\nExiting...")
