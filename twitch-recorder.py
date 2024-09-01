@@ -19,9 +19,9 @@ parser.add_argument("-l", "--list", action="store_true", help="List available st
 parser.add_argument("-q", "--quality", default="best", help="Choose stream quality (default: best)")
 parser.add_argument("-o", "--output", default="", help="Output folder path")
 parser.add_argument(
-    "-d", "--delay", type=int, default=300, help="Retry delay in seconds if stream is not live (default: 300 seconds)"
+    "-d", "--delay", type=int, default=300, help="Retry delay in seconds to recheck for live (default: 300 seconds)"
 )
-parser.add_argument("-s", "--subscribe", nargs="?", const=True, help="Subscribe to a ntfy topic for live notifications")
+parser.add_argument("-s", "--subscribe", nargs="?", const=True, help="Subscribe to the streamer and get a https://ntfy.sh/ notification when they go live (requires ntfy app and subscription setup to your topic of choice)")
 args = parser.parse_args()
 
 
