@@ -6,7 +6,7 @@ This Python script allows you to record Twitch streams using Streamlink and FFmp
 
 *Tested on a raspberry pi 4 and barely noticed if any resources are used up, thanks **ffmpeg***
 
-Wanna learn how to code this shit? [Check here](#license)
+**Wanna learn how to code this shit?** [Check here](#license)
 
 ## Features
 
